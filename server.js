@@ -2,7 +2,7 @@
 
 const io = require("socket.io")(8888, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://tic-tac-toe-online.vercel.app/"],
   },
 });
 
