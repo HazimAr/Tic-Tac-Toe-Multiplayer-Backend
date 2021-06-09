@@ -15,7 +15,6 @@ io.on("connection", (socket) => {
       rooms.forEach((v) => {
         if (v.name === room) {
           v.users.forEach((usr) => {
-            console.log(usr, socket.id);
             if (usr === socket.id) {
               found = true;
             }
