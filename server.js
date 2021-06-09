@@ -38,7 +38,10 @@ io.on("connection", (socket) => {
     });
     if (found) {
       if (found.users.length < 2) {
-        found.users.push(socket.id);
+        found.users.push({
+          id: socket.id,
+          val: true
+        });
         socket.join(room);
       } else {
         socket.send("full");
@@ -46,7 +49,10 @@ io.on("connection", (socket) => {
     } else {
       rooms.push({
         name: room,
-        users: [socket.id],
+        users: [{
+          id: socket.id,
+          val: false
+        }],
       });
       socket.join(room);
     }
