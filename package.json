@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@socket.io/admin-ui": "github:socketio/socket.io-admin-ui",
     "socket.io": "^4.1.2"
   },
   "devDependencies": {
