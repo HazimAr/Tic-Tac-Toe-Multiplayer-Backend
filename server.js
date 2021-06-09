@@ -7,7 +7,10 @@ const io = require("socket.io")(process.env.PORT || 8888, {
 const rooms = [];
 
 io.on("connection", (socket) => {
+  // socket.disconnect();
+  // return;
   let currentRoom = "";
+  let started = false;
 
   socket.on("turn", (board, turn, room) => {
     if (room) {
@@ -29,6 +32,9 @@ io.on("connection", (socket) => {
   socket.on("restart", (room) => {
     if (room) socket.to(room).emit("restart");
   });
+  socket.on("hover", (hov) => {
+    socket.to(currentRoom).emit("hover", hov);
+  });
   socket.on("join-room", (room) => {
     let found = null;
     rooms.forEach((v) => {
@@ -45,6 +51,7 @@ io.on("connection", (socket) => {
         socket.join(room);
         currentRoom = room;
         socket.emit("data", false);
+        started = true;
         socket.to(room).emit("start");
       } else {
         socket.send("full");
@@ -67,7 +74,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    delete rooms[currentRoom]
+    delete rooms[currentRoom];
     socket.to(currentRoom).emit("end");
   });
 });
