@@ -1,5 +1,3 @@
-// const { instrument } = require("@socket.io/admin-ui");
-
 const io = require("socket.io")(process.env.PORT || 8888, {
   cors: {
     origin: ["http://localhost:3000", "https://tic-tac-toe-online.vercel.app"],
@@ -9,6 +7,8 @@ const io = require("socket.io")(process.env.PORT || 8888, {
 const rooms = [];
 
 io.on("connection", (socket) => {
+  let currentRoom = "";
+
   socket.on("turn", (board, turn, room) => {
     if (room) {
       let found = false;
@@ -40,26 +40,33 @@ io.on("connection", (socket) => {
       if (found.users.length < 2) {
         found.users.push({
           id: socket.id,
-          val: false
+          val: false,
         });
         socket.join(room);
-        socket.emit("data", false)
+        currentRoom = room;
+        socket.emit("data", false);
       } else {
         socket.send("full");
       }
     } else {
       rooms.push({
         name: room,
-        users: [{
-          id: socket.id,
-          val: true
-        }],
+        users: [
+          {
+            id: socket.id,
+            val: true,
+          },
+        ],
       });
       socket.join(room);
-      socket.emit("data", true)
+      currentRoom = room;
+      socket.emit("data", true);
     }
     console.log(rooms);
   });
-});
 
-// instrument(io, { auth: false });
+  socket.on("disconnect", () => {
+    delete rooms[currentRoom]
+    socket.to(currentRoom).emit("end");
+  });
+});
