@@ -15,7 +15,7 @@ io.on("connection", (socket) => {
       rooms.forEach((v) => {
         if (v.name === room) {
           v.users.forEach((usr) => {
-            if (usr === socket.id) {
+            if (usr.id === socket.id) {
               found = true;
             }
           });
@@ -40,9 +40,10 @@ io.on("connection", (socket) => {
       if (found.users.length < 2) {
         found.users.push({
           id: socket.id,
-          val: true
+          val: false
         });
         socket.join(room);
+        socket.emit("data", false)
       } else {
         socket.send("full");
       }
@@ -51,10 +52,11 @@ io.on("connection", (socket) => {
         name: room,
         users: [{
           id: socket.id,
-          val: false
+          val: true
         }],
       });
       socket.join(room);
+      socket.emit("data", true)
     }
     console.log(rooms);
   });
