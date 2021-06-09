@@ -45,6 +45,7 @@ io.on("connection", (socket) => {
         socket.join(room);
         currentRoom = room;
         socket.emit("data", false);
+        socket.to(room).emit("start");
       } else {
         socket.send("full");
       }
