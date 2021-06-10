@@ -46,11 +46,11 @@ io.on("connection", (socket) => {
       if (found.users.length < 2) {
         found.users.push({
           id: socket.id,
-          val: false,
+          val: 2,
         });
         socket.join(room);
         currentRoom = room;
-        socket.emit("data", false);
+        socket.emit("data", 2);
         started = true;
         socket.to(room).emit("start");
       } else {
@@ -62,13 +62,13 @@ io.on("connection", (socket) => {
         users: [
           {
             id: socket.id,
-            val: true,
+            val: 1,
           },
         ],
       });
       socket.join(room);
       currentRoom = room;
-      socket.emit("data", true);
+      socket.emit("data", 1);
     }
     console.log(rooms);
   });
