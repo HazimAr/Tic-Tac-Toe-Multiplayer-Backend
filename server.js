@@ -10,6 +10,7 @@ io.on("connection", (socket) => {
   // socket.disconnect();
   // return;
   let currentRoom = "";
+  let started = false;
 
   socket.on("turn", (board, turn, room) => {
     if (room) {
@@ -50,7 +51,8 @@ io.on("connection", (socket) => {
         socket.join(room);
         currentRoom = room;
         socket.emit("data", 1);
-        socket.to(room).emit("start");
+        // socket.to(room).emit("start");
+        started = true;
       } else {
         socket.send("full");
       }
@@ -69,6 +71,12 @@ io.on("connection", (socket) => {
       socket.emit("data", 0);
     }
     console.log(rooms);
+  });
+
+  socket.on("check-start", () => {
+    if (started) {
+      socket.to(currentRoom).emit("start");
+    }
   });
 
   socket.on("disconnect", () => {
