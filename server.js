@@ -10,7 +10,6 @@ io.on("connection", (socket) => {
   // socket.disconnect();
   // return;
   let currentRoom = "";
-  let started = false;
 
   socket.on("turn", (board, turn, room) => {
     if (room) {
@@ -51,7 +50,6 @@ io.on("connection", (socket) => {
         socket.join(room);
         currentRoom = room;
         socket.emit("data", 1);
-        started = true;
         socket.to(room).emit("start");
       } else {
         socket.send("full");
