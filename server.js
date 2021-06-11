@@ -70,11 +70,11 @@ io.on("connection", (socket) => {
       currentRoom = room;
       socket.emit("data", 0);
     }
+    console.log(rooms);
   });
 
   socket.on("disconnect", () => {
     delete rooms[currentRoom];
     socket.to(currentRoom).emit("end");
   });
-  console.log(rooms);
 });
