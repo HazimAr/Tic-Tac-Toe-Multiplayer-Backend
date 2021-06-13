@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
   socket.on("hover", (hov) => {
     socket.to(currentRoom).emit("hover", hov);
   });
-  socket.on("join-room", (room) => {
+  socket.on("join-room", (room, callback) => {
     let found = null;
     rooms.forEach((v) => {
       if (room === v.name) {
@@ -50,9 +50,11 @@ io.on("connection", (socket) => {
         });
         socket.join(room);
         currentRoom = room;
-        socket.emit("data", 1);
-        // socket.to(room).emit("start");
         started = true;
+        callback(started);
+        socket.to(currentRoom).emit("start");
+        socket.emit("data", 1);
+
       } else {
         socket.send("full");
       }
@@ -69,14 +71,9 @@ io.on("connection", (socket) => {
       socket.join(room);
       currentRoom = room;
       socket.emit("data", 0);
+      callback(started);
     }
     console.log(rooms);
-  });
-
-  socket.on("check-start", () => {
-    if (started) {
-      socket.to(currentRoom).emit("start");
-    }
   });
 
   socket.on("disconnect", () => {
