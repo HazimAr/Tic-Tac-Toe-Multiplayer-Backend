@@ -79,6 +79,14 @@ io.on("connection", (socket) => {
     socket.to(room).emit("restart");
   });
 
+  socket.on("disconnect", () => {
+    delete rooms[currentRoom];
+    socket.to(currentRoom).emit("end");
+  });
+});
+
+
+
   // socket.on("disconnect", () => {
   //   currentRooms.forEach((room) => {
   //     console.log(room);
@@ -103,8 +111,3 @@ io.on("connection", (socket) => {
   //   //   if (user.id == socket.id) return;
   //   // });
   // });
-  socket.on("disconnect", () => {
-    delete rooms[currentRoom];
-    socket.to(currentRoom).emit("end");
-  });
-});
