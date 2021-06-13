@@ -7,8 +7,8 @@ const io = require("socket.io")(process.env.PORT || 8888, {
 const rooms = [];
 
 io.on("connection", (socket) => {
-  // socket.disconnect();
-  // return;
+  socket.disconnect();
+  return;
   let currentRoom = "";
   let started = false;
 
@@ -54,7 +54,6 @@ io.on("connection", (socket) => {
         callback(started);
         socket.to(currentRoom).emit("start");
         socket.emit("data", 1);
-
       } else {
         socket.send("full");
       }
