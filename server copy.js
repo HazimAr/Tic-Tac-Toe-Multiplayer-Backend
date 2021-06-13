@@ -9,7 +9,7 @@ const rooms = [];
 io.on("connection", (socket) => {
   // socket.disconnect();
   // return;
-  let currentRoom;
+  let currentRoom = "";
   let started = false;
 
   socket.on("turn", (board, turn, room) => {
@@ -24,29 +24,39 @@ io.on("connection", (socket) => {
           });
         }
       });
-
-      if (found) socket.to(room).except(socket.id).emit("turn", board, turn);
+      if (found) {
+        socket.to(room).emit("turn", board, turn);
+      }
     }
   });
 
+  socket.on("restart", (room) => {
+    if (room) socket.to(room).emit("restart");
+  });
+
+  socket.on("hover", (hov) => {
+    socket.to(currentRoom).emit("hover", hov);
+  });
+  
   socket.on("join-room", (room, callback) => {
     let found = null;
-    rooms.forEach((r) => {
-      if (r.name === room) {
-        found = r;
+    rooms.forEach((v) => {
+      if (room === v.name) {
+        found = v;
       }
     });
     if (found) {
-      if (found.users.includes(socket.id)) {
-        return;
-      }
       if (found.users.length < 2) {
-        found.users.push({ id: socket.id, val: 1 });
+        found.users.push({
+          id: socket.id,
+          val: 1,
+        });
         socket.join(room);
         currentRoom = room;
         started = true;
-        callback(started, 1);
+        callback(started);
         socket.to(currentRoom).emit("start");
+        socket.emit("data", 1);
       } else {
         socket.send("full");
       }
@@ -62,16 +72,14 @@ io.on("connection", (socket) => {
       });
       socket.join(room);
       currentRoom = room;
-      callback(started, 0);
+      socket.emit("data", 0);
+      callback(started);
     }
     console.log(rooms);
   });
 
-  // socket.on("disconnect", () => {
-  //   socket.leave(currentRoom);
-  //   // probably gonna cause bugs :(
-  //   rooms.filter((ele, index) => {
-  //     rooms.splice(index, 1);
-  //   });
-  // });
+  socket.on("disconnect", () => {
+    delete rooms[currentRoom];
+    socket.to(currentRoom).emit("end");
+  });
 });
