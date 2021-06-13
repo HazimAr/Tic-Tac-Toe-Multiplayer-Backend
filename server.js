@@ -9,7 +9,6 @@ const rooms = [];
 io.on("connection", (socket) => {
   // socket.disconnect();
   // return;
-  let currentRoom;
   let started = false;
 
   socket.on("turn", (board, turn, room) => {
@@ -43,10 +42,9 @@ io.on("connection", (socket) => {
       if (found.users.length < 2) {
         found.users.push({ id: socket.id, val: 1 });
         socket.join(room);
-        currentRoom = room;
         started = true;
         callback(started, 1);
-        socket.to(currentRoom).emit("start");
+        socket.to(room).emit("start");
       } else {
         socket.send("full");
       }
@@ -61,10 +59,13 @@ io.on("connection", (socket) => {
         ],
       });
       socket.join(room);
-      currentRoom = room;
       callback(started, 0);
     }
     console.log(rooms);
+  });
+
+  socket.on("restart", (room) => {
+    socket.to(room).emit("restart");
   });
 
   // socket.on("disconnect", () => {
