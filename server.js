@@ -11,6 +11,10 @@ io.on("connection", (socket) => {
   // return;
   let started = false;
 
+  socket.on("hover", (hover, room) => {
+    socket.to(room).emit("hover", hover);
+  });
+
   socket.on("turn", (board, turn, room) => {
     if (room) {
       let found = false;
@@ -36,9 +40,9 @@ io.on("connection", (socket) => {
       }
     });
     if (found) {
-      if (found.users.includes(socket.id)) {
-        return;
-      }
+      found.users.forEach((user) => {
+        if (user.id == socket.id) return;
+      });
       if (found.users.length < 2) {
         found.users.push({ id: socket.id, val: 1 });
         socket.join(room);
