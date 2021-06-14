@@ -7,7 +7,7 @@
     "dev": "nodemon server.js",
     "build": "node server.js"
   },
-  "author": "",
+  "author": "Hazim Arafa",
   "license": "ISC",
   "dependencies": {
     "socket.io": "^4.1.2"
