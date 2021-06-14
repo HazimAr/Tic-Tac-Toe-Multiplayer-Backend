@@ -34,7 +34,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-room", (room, callback) => {
-    console.log("join");
     let found = null;
     rooms.forEach((r) => {
       if (r.name === room) {
@@ -71,7 +70,7 @@ io.on("connection", (socket) => {
 
       callback(started, 0);
     }
-    console.log(rooms);
+    // console.log(rooms);
   });
 
   socket.on("restart", (room) => {
