@@ -85,4 +85,8 @@ io.on("connection", (socket) => {
     });
     socket.to(currentRoom).emit("leave");
   });
+
+  socket.on("ping", (cb) => {
+    if (typeof cb === "function") cb();
+  });
 });
