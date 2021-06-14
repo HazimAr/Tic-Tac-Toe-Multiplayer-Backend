@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 
         currentRoom = room;
         started = true;
-        callback(1);
+        callback(started, 1);
         socket.to(room).emit("start");
       } else {
         socket.send("full");
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
       socket.join(room);
       currentRoom = room;
 
-      callback(0);
+      callback(started, 0);
     }
     // console.log(rooms);
   });
