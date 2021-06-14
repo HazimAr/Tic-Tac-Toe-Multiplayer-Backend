@@ -89,28 +89,3 @@ io.on("connection", (socket) => {
     socket.to(currentRoom).emit("leave");
   });
 });
-
-// socket.on("disconnect", () => {
-//   currentRooms.forEach((room) => {
-//     console.log(room);
-//     socket.leave(room);
-//     room.users.forEach((user) => {
-//       if (user.id == socket.id) {
-//         rooms.filter((room, index) => {
-//           rooms.splice(index, 1);
-//         });
-//       }
-//     });
-//   });
-//   // probably gonna cause bugs :(
-//   //
-//   //  let found = null;
-//   //  rooms.forEach((r) => {
-//   //    if (r.name === room) {
-//   //      found = r;
-//   //    }
-//   //  });
-//   // found.users.forEach((user) => {
-//   //   if (user.id == socket.id) return;
-//   // });
-// });
