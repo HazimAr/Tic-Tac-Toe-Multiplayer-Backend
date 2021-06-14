@@ -7,12 +7,8 @@ const io = require("socket.io")(process.env.PORT || 8888, {
 const rooms = [];
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
-  // socket.disconnect();
-  // return;
   let started = false;
   let currentRoom = "";
-  // let currentRooms = [];
 
   socket.on("hover", (hover, room) => {
     socket.to(room).emit("hover", hover);
