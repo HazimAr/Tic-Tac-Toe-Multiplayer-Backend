@@ -1,4 +1,4 @@
-const io = require("socket.io")(process.env.PORT || 1234, {
+const io = require("socket.io")(process.env.PORT || 8888, {
   cors: {
     origin: ["http://localhost:3000", "https://tic-tac-toe-online.vercel.app"],
   },
