@@ -1,4 +1,4 @@
-const io = require("socket.io")(process.env.PORT || 8888, {
+const io = require("socket.io")(process.env.PORT || 1234, {
   cors: {
     origin: ["http://localhost:3000", "https://tic-tac-toe-online.vercel.app"],
   },
@@ -7,6 +7,7 @@ const io = require("socket.io")(process.env.PORT || 8888, {
 const rooms = [];
 
 io.on("connection", (socket) => {
+  console.log(socket.id);
   // socket.disconnect();
   // return;
   let started = false;
@@ -80,8 +81,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    delete rooms[currentRoom];
-    socket.to(currentRoom).emit("end");
+    rooms.forEach((room, i) => {
+      if (room.name === currentRoom) {
+        rooms.splice(i, 1);
+      }
+    });
+    socket.to(currentRoom).emit("leave");
   });
 });
 
