@@ -1,18 +1,16 @@
-const io = require("socket.io")(process.env.PORT || 8888, {
+const io = require("socket.io")(process.env.PORT || 3001, {
   cors: {
     origin: ["*"],
   },
 });
 
 const rooms = [];
-
 io.on("connection", (socket) => {
-  console.log(socket.id);
   // socket.disconnect();
   // return;
+
   let started = false;
   let currentRoom = "";
-  // let currentRooms = [];
 
   socket.on("hover", (hover, room) => {
     socket.to(room).emit("hover", hover);
@@ -36,6 +34,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-room", (room, callback) => {
+    console.log("join");
     let found = null;
     rooms.forEach((r) => {
       if (r.name === room) {
@@ -49,7 +48,7 @@ io.on("connection", (socket) => {
       if (found.users.length < 2) {
         found.users.push({ id: socket.id, val: 1 });
         socket.join(room);
-        // currentRooms.push(room);
+
         currentRoom = room;
         started = true;
         callback(started, 1);
@@ -68,7 +67,6 @@ io.on("connection", (socket) => {
         ],
       });
       socket.join(room);
-      // currentRooms.push(room);
       currentRoom = room;
 
       callback(started, 0);
@@ -89,28 +87,3 @@ io.on("connection", (socket) => {
     socket.to(currentRoom).emit("leave");
   });
 });
-
-// socket.on("disconnect", () => {
-//   currentRooms.forEach((room) => {
-//     console.log(room);
-//     socket.leave(room);
-//     room.users.forEach((user) => {
-//       if (user.id == socket.id) {
-//         rooms.filter((room, index) => {
-//           rooms.splice(index, 1);
-//         });
-//       }
-//     });
-//   });
-//   // probably gonna cause bugs :(
-//   //
-//   //  let found = null;
-//   //  rooms.forEach((r) => {
-//   //    if (r.name === room) {
-//   //      found = r;
-//   //    }
-//   //  });
-//   // found.users.forEach((user) => {
-//   //   if (user.id == socket.id) return;
-//   // });
-// });
