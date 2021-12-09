@@ -1,6 +1,6 @@
 const io = require("socket.io")(process.env.PORT || 3001, {
   cors: {
-    origin: ["http://localhost:3000", "https://tic.webdefy.tech/"],
+    origin: ["http://localhost:3000", "https://tic.webdefy.tech"],
   },
 });
 
